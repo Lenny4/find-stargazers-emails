@@ -1,0 +1,16 @@
+version: "3.4"
+
+services:
+  node:
+    env_file:
+      - .env
+    build:
+      context: .
+      target: app_node
+    restart: unless-stopped
+    volumes:
+      - ./:/srv/app:rw
+    ports:
+      - target: ${NODE_API_PORT:-3000}
+        published: ${NODE_API_PORT:-3000}
+
