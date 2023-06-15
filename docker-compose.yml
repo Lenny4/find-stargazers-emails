@@ -4,6 +4,7 @@ services:
   node:
     env_file:
       - .env
+      - .env.local
     build:
       context: .
       target: app_node
