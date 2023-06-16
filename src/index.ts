@@ -8,6 +8,7 @@ require('log-timestamp');
 const maxRequestPerHour = 1000;
 const waitTime = (3601 / maxRequestPerHour) * 1000; // 1000 request per hour: rate limit https://docs.github.com/en/rest/overview/resources-in-the-rest-api?apiVersion=2022-11-28#rate-limits-for-requests-from-github-actions
 const token = process.env.TOKEN;
+const githubRepo = new URL(process.env.GITHUB_REPO ?? "");
 
 function getEmails(data: any, emails: string[]) {
     for (const key in data) {
@@ -38,7 +39,7 @@ async function start() {
     let stargazers = [];
     do {
         await new Promise(resolve => setTimeout(resolve, waitTime));
-        stargazers = await (await fetch('https://api.github.com/repos/iperov/DeepFaceLab/stargazers?page=' + page + '&per_page=' + perPage, {
+        stargazers = await (await fetch('https://api.github.com/repos' + githubRepo.pathname + '/stargazers?page=' + page + '&per_page=' + perPage, {
             headers: {
                 'Authorization': 'Bearer ' + token,
             }
