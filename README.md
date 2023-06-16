@@ -3,6 +3,7 @@ Get all users email who star a repo
 ## How to use
 ```
 git clone https://github.com/Lenny4/find-stargazers-emails.git
+cd find-stargazers-emails
 echo -e 'TOKEN=\nGITHUB_REPO='> .env.local
 ```
 
