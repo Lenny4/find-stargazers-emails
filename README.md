@@ -1,14 +1,17 @@
-Simple program to get all users email who star a repo
+Get all users email who star a repo
 
 ## How to use
 ```
 git clone https://github.com/Lenny4/find-stargazers-emails.git
-docker compose up --build
+echo -e 'TOKEN=\nGITHUB_REPO='> .env.local
 ```
 
 Go to https://github.com/settings/tokens/new to generate a token
 
+Then place your token and github repo url in `.env.local`
+
 ```bash
-echo TOKEN=> .env.local
+docker compose up --build
 ```
-Then place your token in it
+
+Emails will be avaible in `src/data/email.json`
