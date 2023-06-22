@@ -11,13 +11,7 @@ $emails = array_unique($emails);
 $nbRawUniqueEmails = count($emails);
 $emails = array_filter($emails, static function (string $mail) {
     $split = explode('@', $mail);
-    if (count($split) !== 2) {
-        return false;
-    }
-    if (str_contains($mail, 'noreply')) {
-        return false;
-    }
-    return true;
+    return !(count($split) !== 2 || str_contains($mail, 'noreply'));
 });
 $nbEmails = count($emails);
 $stats = [];
