@@ -53,6 +53,8 @@ async function start() {
                     name: null,
                     emails: [],
                 }
+            } else {
+                continue;
             }
             await new Promise(resolve => setTimeout(resolve, waitTime));
             const user = await (await fetch('https://api.github.com/users/' + stargazer.login, {
@@ -100,7 +102,7 @@ async function start() {
                 emails.push(user.email);
             }
             await new Promise(resolve => setTimeout(resolve, waitTime));
-            const events = await (await fetch('https://api.github.com/users/' + stargazer.login + '/events/public', {
+            const events = await (await fetch('https://api.github.com/users/' + stargazer.login + '/events/public?per_page=' + perPage, {
                 headers: {
                     'Authorization': 'Bearer ' + token,
                 }
@@ -118,4 +120,4 @@ async function start() {
     } while (stargazers.length > 0)
 }
 
-start();
+// start();
