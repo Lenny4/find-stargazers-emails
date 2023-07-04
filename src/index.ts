@@ -149,7 +149,7 @@ const createSendEmailCommand = (toAddress: string, fromAddress: string) => {
 <body>
   <p>Hello,</p>
 
-  <p>I hope this email finds you well. I wanted to reach out and introduce you to an exciting open-source project called DeepFaceLabClient. If you have an interest in deep learning, face swaps, or video editing, this is something you don't want to miss!</p>
+  <p>I hope this email finds you well. I wanted to reach out and introduce you to an exciting open-source project called <a href="https://github.com/Lenny4/DeepFaceLabClient">DeepFaceLabClient</a>. If you have an interest in deep learning, face swaps, or video editing, this is something you don't want to miss!</p>
 
   <h2>Key Features of DeepFaceLabClient:</h2>
   
@@ -198,21 +198,42 @@ async function sendEmails() {
         region: "us-east-1",
 
     });
-    try {
-        const result = await client.send(createSendEmailCommand(
-            // "lenny4-SLUO@srv1.mail-tester.com",
-            // "deepfacelabclient@outlook.com",
-            "deepfacelabclient@outlook.com",
-            "alexandre.beaujour@hotmail.fr"
-        ));
-        if (result['$metadata'].httpStatusCode !== 200) {
-            console.error(result);
+    const mailPerSecond = 14;
+    const emailFilePath = '/srv/app/src/data/listEmail.json';
+    let listEmails: string[] = JSON.parse(fs.readFileSync(emailFilePath, {encoding: 'utf8'}));
+    listEmails = listEmails.filter((value, index, array) => array.indexOf(value) === index);
+    let sendedTimes: number[] = [];
+    let startMail = "befovy@gmail.com";
+    let started = false;
+    for (const [index, email] of listEmails.entries()) {
+        if (startMail === email) {
+            started = true;
+            continue;
         }
-    } catch (e) {
-        console.error(e);
-        return e;
+        if (!started) {
+            continue;
+        }
+        const now = Date.now();
+        sendedTimes.push(now);
+        sendedTimes = sendedTimes.filter(t => t > now - 1000);
+        if (sendedTimes.length >= mailPerSecond) {
+            await new Promise(resolve => setTimeout(resolve, (now - sendedTimes[0] + 100)));
+        }
+        try {
+            const result = await client.send(createSendEmailCommand(
+                email,
+                "deepfacelab.client@outlook.com",
+            ));
+            if (result['$metadata'].httpStatusCode !== 200) {
+                console.error(result);
+            } else {
+                console.log("mail sended to " + email + " [" + index + "/" + listEmails.length + ", " + Math.floor((index / listEmails.length) * 100) + "%]");
+            }
+        } catch (e) {
+            console.error(e);
+        }
     }
 }
 
-// start();
+start();
 // sendEmails();
