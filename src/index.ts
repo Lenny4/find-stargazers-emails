@@ -203,16 +203,7 @@ async function sendEmails() {
     let listEmails: string[] = JSON.parse(fs.readFileSync(emailFilePath, {encoding: 'utf8'}));
     listEmails = listEmails.filter((value, index, array) => array.indexOf(value) === index);
     let sendedTimes: number[] = [];
-    let startMail = "befovy@gmail.com";
-    let started = false;
     for (const [index, email] of listEmails.entries()) {
-        if (startMail === email) {
-            started = true;
-            continue;
-        }
-        if (!started) {
-            continue;
-        }
         const now = Date.now();
         sendedTimes.push(now);
         sendedTimes = sendedTimes.filter(t => t > now - 1000);
